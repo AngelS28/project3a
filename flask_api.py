@@ -9,7 +9,7 @@ app = Flask(__name__, static_folder='static')
 app.config["DEBUG"] = True
 app.config['SECRET_KEY'] = 'your secret key'
 
-API_KEY = "ZD9X9OJCBFZXU3SJ"
+API_KEY = "8G1UIII9UVSTDVKT"
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
