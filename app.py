@@ -3,7 +3,6 @@ import pygal
 import csv
 import base64
 from flask import Flask, render_template, request, Markup
-import requests
 
 app = Flask(__name__, static_folder='static')
 app.config["DEBUG"] = True
