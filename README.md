@@ -1,3 +1,3 @@
 # project3a
 
-Flask Website Applicatin for IT 4320
+Flask Website Application for IT 4320

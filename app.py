@@ -2,7 +2,8 @@ import os
 import pygal
 import csv
 import base64
-from flask import Flask, render_template, request, Markup
+from flask import Flask, render_template, request
+from jinja2 import Markup
 import requests
 
 app = Flask(__name__, static_folder='static')
@@ -89,7 +90,10 @@ def make_graph(stock_data, chart_type, chart_time_series, start_date, end_date):
     if not dates:
         print("There Was No Data Available For Your Input")
     else:
-        chart = pygal.Line() if chart_type == 2 else pygal.Bar()
+        if chart_type == 2:
+            chart = pygal.Line()
+        else:
+            chart = pygal.Bar()
         chart.title = f'Stock Data for {ticker}: {start_date} to {end_date}'
         chart.x_labels = dates
         chart.add('Opening', opening)
@@ -100,6 +104,7 @@ def make_graph(stock_data, chart_type, chart_time_series, start_date, end_date):
         chart_svg = chart.render(is_unicode=True)
 
         return chart_svg
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001)
