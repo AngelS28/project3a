@@ -3,32 +3,40 @@ import pygal
 import csv
 import base64
 from flask import Flask, render_template, request
-from jinja2 import Markup
+from markupsafe import Markup 
 import requests
 
+#Initialize and configure Flask
 app = Flask(__name__, static_folder='static')
+
 app.config["DEBUG"] = True
 app.config['SECRET_KEY'] = 'your secret key'
 
 API_KEY = "8G1UIII9UVSTDVKT"
 
+#Define routes
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         try:
+            #Extract form data
             ticker_symbol = request.form['ticker_symbol'].upper()
             chart_type = int(request.form['chart_type'])
             chart_time_series = request.form['chart_time_series']
             start_date = request.form['start_date']
             end_date = request.form['end_date']
 
+            #Get stock data from API
             stock_data = get_stock_data(ticker_symbol, chart_time_series)
+            print("Stock data:", stock_data)
 
+            #Generate chart
             if stock_data:
                 chart_svg = make_graph(stock_data, chart_type, chart_time_series, start_date, end_date)
                 return render_template('index.html', chart_generated=True, chart_svg=Markup(chart_svg))
             else:
                 return render_template('index.html', error_message="Error fetching stock data.")
+        #Error checking
         except Exception as e:
             return render_template('index.html', error_message=f"Error: {e}")
 
@@ -36,6 +44,7 @@ def index():
 
     return render_template('index.html', stock_symbols=stock_symbols)
 
+#Get ticker symbols from csv
 def get_stock_symbols():
     stock_symbols = []
     with open('stocks.csv', 'r') as csvfile:
@@ -44,6 +53,7 @@ def get_stock_symbols():
             stock_symbols.append(row['Symbol'])
     return stock_symbols
 
+#Stock data from API
 def get_stock_data(symbol, time_series):
     base_url = "https://www.alphavantage.co/query"
     function = f'TIME_SERIES_{"INTRADAY" if time_series == "5" else "DAILY"}'
@@ -64,6 +74,7 @@ def get_stock_data(symbol, time_series):
         print(f"API Response: {response.text}")
         return None
 
+#Create graph
 def make_graph(stock_data, chart_type, chart_time_series, start_date, end_date):
     time_series_key = 'Time Series (5min)' if chart_time_series == '5' else 'Time Series (Daily)'
     
@@ -105,6 +116,6 @@ def make_graph(stock_data, chart_type, chart_time_series, start_date, end_date):
 
         return chart_svg
 
-
+#Run Flask
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001)
