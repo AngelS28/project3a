@@ -57,6 +57,7 @@ def get_stock_symbols():
 def get_stock_data(symbol, time_series):
     base_url = "https://www.alphavantage.co/query"
     function = f'TIME_SERIES_{"INTRADAY" if time_series == "5" else "DAILY"}'
+    
     params = {
         "function": function,
         "symbol": symbol,
