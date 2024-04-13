@@ -1,95 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Import Bootstrap-->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
+
     <style>
+
         body {
-            background-color: #212eba;
+            background-color: #f5f5f5; 
             padding: 15px;
+            font-family: Arial, sans-serif; 
+        }
+
+        .container {
+            max-width: 600px; 
+            margin: 0 auto; 
+            background-color: #fff; 
+            padding: 20px; 
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            color: #dfdedc;
+            color: #333; 
         }
 
         form {
-            margin-top: 10px;
+            margin-top: 20px; 
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px; 
             font-weight: bold;
+            color: #555; 
         }
 
         input,
         select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            width: calc(100% - 20px); /* Adjust the width as needed */
+            padding: 6px; /* Reduced padding */
+            margin-bottom: 15px; 
             box-sizing: border-box;
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            font-size: 14px; 
         }
 
         button {
-            background-color: #6872da;
+            background-color: #555; 
             color: #fff;
-            padding: 10px 15px;
+            padding: 8px 12px; 
             border: none;
+            border-radius: 5px; 
             cursor: pointer;
+            font-size: 14px; 
+            transition: background-color 0.3s; 
         }
+
+        button:hover {
+            background-color: #333;
+        }
+
     </style>
+
     <title>Stock Data Visualizer</title>
+
 </head>
+
 <body>
-    <h1>Stock Data Visualizer</h1>
+    <div class="container">
+        <h1>Stock Data Visualizer</h1>
 
-    {% if error_message %}
+        {% if error_message %}
         <p class="error">{{ error_message }}</p>
-    {% endif %}
+        {% endif %}
 
-    <form method="post" action="/">
-        <label for="ticker_symbol">Stock Symbol:</label>
-        <select name="ticker_symbol" required>
-            {% for symbol in stock_symbols %}
+        <form method="post" action="/">
+            <label for="ticker_symbol">Stock Symbol:</label>
+            <select name="ticker_symbol" required>
+                {% for symbol in stock_symbols %}
                 <option value="{{ symbol }}">{{ symbol }}</option>
-            {% endfor %}
-        </select>
-    
-        <label for="chart_type">Chart Type:</label>
-        <select name="chart_type" required>
-            <option value="1">Bar</option>
-            <option value="2">Line</option>
-        </select>
-    
-        <label for="chart_time_series">Time Series:</label>
-        <select name="chart_time_series" required>
-            <option value="1">Intraday</option>
-            <option value="2">Daily</option>
-            <option value="3">Weekly</option>
-            <option value="4">Monthly</option>
-        </select>
-    
-        <label for="start_date">Start Date:</label>
-        <input type="text" name="start_date" id="start_date" class="form-control" required>
-    
-        <label for="end_date">End Date:</label>
-        <input type="text" name="end_date" id="end_date" class="form-control" required>
-    
-        <button type="submit">Generate Chart</button>
-    </form>
-    
+                {% endfor %}
+            </select>
 
-    {% if chart_generated %}
+            <label for="chart_type">Chart Type:</label>
+            <select name="chart_type" required>
+                <option value="1">Bar</option>
+                <option value="2">Line</option>
+            </select>
+
+            <label for="chart_time_series">Time Series:</label>
+            <select name="chart_time_series" required>
+                <option value="1">Intraday</option>
+                <option value="2">Daily</option>
+                <option value="3">Weekly</option>
+                <option value="4">Monthly</option>
+            </select>
+
+            <label for="start_date">Start Date:</label>
+            <input type="text" name="start_date" id="start_date" class="form-control" required>
+
+            <label for="end_date">End Date:</label>
+            <input type="text" name="end_date" id="end_date" class="form-control" required>
+
+            <button type="submit">Generate Chart</button>
+        </form>
+
+
+        {% if chart_generated %}
         <p>Chart generated successfully. You can view it below:</p>
         <div>
             {{ chart_svg|safe }}
         </div>
-    {% endif %}
+        {% endif %}
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -97,7 +130,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('#start_date').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true
@@ -110,7 +143,3 @@
         });
     </script>
 </body>
-</html>
-
-
-
