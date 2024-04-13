@@ -4,7 +4,6 @@ import csv
 import base64
 from flask import Flask, render_template, request, Markup
 import requests
-requests.get
 
 app = Flask(__name__, static_folder='static')
 app.config["DEBUG"] = True
@@ -46,12 +45,12 @@ def get_stock_symbols():
 
 def get_stock_data(symbol, time_series):
     base_url = "https://www.alphavantage.co/query"
-    function = f'TIME_SERIES_{"INTRADAY" if time_series == "1" else "DAILY"}'
+    function = f'TIME_SERIES_{"INTRADAY" if time_series == "5" else "DAILY"}'
     params = {
         "function": function,
         "symbol": symbol,
         "apikey": API_KEY,
-        "interval": "1min" if time_series == "1" else None
+        "interval": "5min" if time_series == "5" else None
     }
 
     response = requests.get(base_url, params=params)
@@ -65,7 +64,7 @@ def get_stock_data(symbol, time_series):
         return None
 
 def make_graph(stock_data, chart_type, chart_time_series, start_date, end_date):
-    time_series_key = 'Time Series (1min)' if chart_time_series == '1' else 'Time Series (Daily)'
+    time_series_key = 'Time Series (5min)' if chart_time_series == '5' else 'Time Series (Daily)'
     
     if time_series_key not in stock_data:
         print(f"No data available for the specified time period: {start_date} to {end_date}")
